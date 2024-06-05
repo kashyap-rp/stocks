@@ -6,12 +6,13 @@ async function fetchSectorPerformance() {
   try {
     const res = await fetch(`https://api.polygon.io/v2/aggs/ticker/AAPL/range/1/day/2023-01-09/2023-01-09?apiKey=${process.env.POLY_ENV_KEY}`);
     if (!res.ok) {
-      throw new Error("Failed to fetch sector performance");
+      console.error("Failed to fetch sector performance");
+      return [];
     }
     return res.json();
   } catch (error) {
     console.error('Error fetching sector performance:', error);
-    throw error;
+    return [];
   }
 }
 
@@ -23,7 +24,7 @@ interface Sector {
 export default async function SectorPerformance() {
   const data = (await fetchSectorPerformance()) as Sector[]
 
-  if (!data) {
+  if (!data.length) {
     return null
   }
 
