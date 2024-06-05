@@ -1,19 +1,18 @@
 import { cn } from "@/lib/utils"
+import { websocketClient } from "@polygon.io/client-js";
+const stocksWS = websocketClient("eZXrvnkfa78ZYoz2uzhT0Selo31ZzBl1").stocks();
 
 async function fetchSectorPerformance() {
-  const url = `https://financialmodelingprep.com/api/v3/sector-performance?apikey=${process.env.FMP_API_KEY}`
-  const options = {
-    method: "GET",
-    next: {
-      revalidate: 3600,
-    },
+  try {
+    const res = await fetch(`https://api.polygon.io/v2/aggs/ticker/AAPL/range/1/day/2023-01-09/2023-01-09?apiKey=${process.env.POLY_ENV_KEY}`);
+    if (!res.ok) {
+      throw new Error("Failed to fetch sector performance");
+    }
+    return res.json();
+  } catch (error) {
+    console.error('Error fetching sector performance:', error);
+    throw error;
   }
-  const res = await fetch(url, options)
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch sector performance")
-  }
-  return res.json()
 }
 
 interface Sector {
