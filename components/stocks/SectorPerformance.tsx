@@ -1,10 +1,8 @@
 import { cn } from "@/lib/utils"
-import { websocketClient } from "@polygon.io/client-js";
-const stocksWS = websocketClient("eZXrvnkfa78ZYoz2uzhT0Selo31ZzBl1").stocks();
 
 async function fetchSectorPerformance() {
   try {
-    const res = await fetch(`https://api.polygon.io/v2/aggs/ticker/AAPL/range/1/day/2023-01-09/2023-01-09?apiKey=${process.env.POLY_ENV_KEY}`);
+    const res = await fetch('https://finance.yahoo.com/quote/appl');
     if (!res.ok) {
       console.error("Failed to fetch sector performance");
       return [];
