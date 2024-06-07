@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
+import ChatBar from "@/components/ui/ChatBar";
 import { ViewTransitions } from "next-view-transitions"
 import { ThemeProvider } from "@/components/ui/theme-provider"
 import Navigation from "@/components/ui/navigation"
@@ -33,6 +34,7 @@ export default function RootLayout({
           >
             <Navigation />
             <main className="container">{children}</main>
+            <ChatBar />
             <Footer />
           </ThemeProvider>
         </body>
