@@ -1,5 +1,5 @@
 import { DataTable } from "@/components/stocks/markets/data-table"
-import yahooFinance from "yahoo-finance2"
+// import yahooFinance from "yahoo-finance2"
 import {
   Card,
   CardContent,
@@ -7,8 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { DEFAULT_INTERVAL, DEFAULT_RANGE } from "@/lib/yahoo-finance/constants"
-import { Interval } from "@/types/yahoo-finance"
+import { DEFAULT_INTERVAL, DEFAULT_RANGE } from "@/lib/alpha-finance/constants"
+import { Interval } from "@/types/alpha-vantage"
 import { Suspense } from "react"
 import MarketsChart from "@/components/chart/MarketsChart"
 import Link from "next/link"
@@ -17,8 +17,8 @@ import SectorPerformance from "@/components/stocks/SectorPerformance"
 import {
   validateInterval,
   validateRange,
-} from "@/lib/yahoo-finance/fetchChartData"
-import { fetchStockSearch } from "@/lib/yahoo-finance/fetchStockSearch"
+} from "@/lib/alpha-finance/fetchChartData"
+import { fetchStockSearch } from "@/lib/alpha-finance/fetchStockSearch"
 
 function isMarketOpen() {
   const now = new Date()

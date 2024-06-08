@@ -3,15 +3,15 @@ import CompanySummaryCard from "@/app/stocks/[ticker]/components/CompanySummaryC
 import FinanceSummary from "@/app/stocks/[ticker]/components/FinanceSummary"
 import News from "@/app/stocks/[ticker]/components/News"
 import { Card, CardContent } from "@/components/ui/card"
-import { DEFAULT_INTERVAL, DEFAULT_RANGE } from "@/lib/yahoo-finance/constants"
+import { DEFAULT_INTERVAL, DEFAULT_RANGE } from "@/lib/alpha-finance/constants"
 import {
   validateInterval,
   validateRange,
-} from "@/lib/yahoo-finance/fetchChartData"
-import { Interval } from "@/types/yahoo-finance"
+} from "@/lib/alpha-finance/fetchChartData"
+import { Interval } from "@/types/alpha-vantage"
 import { Suspense } from "react"
 import type { Metadata } from "next"
-import { fetchQuote } from "@/lib/yahoo-finance/fetchQuote"
+import { fetchQuote } from "@/lib/alpha-finance/fetchQuote"
 
 type Props = {
   params: {

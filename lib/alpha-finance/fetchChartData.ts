@@ -3,7 +3,7 @@ import type {
   ChartOptions,
   ChartResultArray,
 } from "@/node_modules/yahoo-finance2/dist/esm/src/modules/chart"
-import type { Interval, Range } from "@/types/yahoo-finance"
+import type { Interval, Range } from "@/types/alpha-vantage"
 import { DEFAULT_RANGE, INTERVALS_FOR_RANGE, VALID_RANGES } from "./constants"
 import { CalculateRange } from "@/lib/utils"
 import yahooFinance from "yahoo-finance2"

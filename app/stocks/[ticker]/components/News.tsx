@@ -1,4 +1,4 @@
-import { fetchStockSearch } from "@/lib/yahoo-finance/fetchStockSearch"
+import { fetchStockSearch } from "@/lib/alpha-finance/fetchStockSearch"
 import Link from "next/link"
 import {
   differenceInMinutes,
