@@ -1,13 +1,13 @@
 import { cn } from "@/lib/utils"
 import { fetchChartData } from "@/lib/alpha-finance/fetchChartData"
-import type { Interval, Range } from "@/types/alpha-vantage"
+import type { Interval } from "@/types/alpha-vantage"
 import AreaClosedChart from "./AreaClosedChart"
 import yahooFinance from "yahoo-finance2"
 import { fetchQuote } from "@/lib/alpha-finance/fetchQuote"
 
 interface StockGraphProps {
   ticker: string
-  range: Range
+  range: string
   interval: Interval
 }
 
@@ -140,7 +140,7 @@ export default async function StockChart({
             </span>
           </div>
           <span className="space-x-1 whitespace-nowrap font-semibold">
-            {priceChange !== 0 && rangeTextMapping[range] !== "" && (
+            {priceChange !== 0 && rangeTextMapping[range as keyof typeof rangeTextMapping] !== "" && (
               <span
                 className={cn(
                   priceChange > 0
@@ -154,7 +154,7 @@ export default async function StockChart({
               </span>
             )}
             <span className="text-muted-foreground">
-              {rangeTextMapping[range]}
+              {rangeTextMapping[range as keyof typeof rangeTextMapping]}
             </span>
           </span>
         </div>

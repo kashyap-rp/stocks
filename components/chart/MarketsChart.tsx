@@ -1,5 +1,5 @@
 import { fetchChartData } from "@/lib/alpha-finance/fetchChartData"
-import { Interval, Range } from "@/types/alpha-vantage"
+import { Interval } from "@/types/alpha-vantage"
 import AreaClosedChart from "./AreaClosedChart"
 import { fetchQuote } from "@/lib/alpha-finance/fetchQuote"
 
