@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 
 async function fetchSectorPerformance() {
   try {
-    const API_KEY = 'P5IY74QSU3Q7KSNC';
+    const API_KEY = process.env.ALPHA_VANTAGE_KEY;
     const res = await fetch(`https://www.alphavantage.co/query?function=SECTOR&apikey=${API_KEY}`);
     if (!res.ok) {
       console.error("Failed to fetch sector performance");
