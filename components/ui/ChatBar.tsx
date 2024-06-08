@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 
@@ -32,16 +33,18 @@ const ChatBar: React.FC = () => {
       }
     }
   };
+=======
+import * as React from "react";
+import axious from 'axios';
+>>>>>>> parent of f8ff219 (dev: janitor commit)
 
+const ChatBar = () => {
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-transparent p-2">
       <input
         type="text"
         className="w-full px-3 py-2 rounded-md"
         placeholder="Talk to any stock..."
-        value={input}
-        onChange={handleInputChange}
-        onKeyPress={handleKeyPress}
       />
     </div>
   );
