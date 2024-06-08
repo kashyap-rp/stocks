@@ -1,3 +1,3 @@
 Add authentication using Supabase (low priority)
 Add Rate Limiting (Medium priority)
-Add the Tradiding Algorithm/Calculations
+Add the Tradiding Algorithm/Calculations (roi.ts which is an example file)
