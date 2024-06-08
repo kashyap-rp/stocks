@@ -16,9 +16,8 @@ const ChatBar: React.FC = () => {
           max_tokens: 60
         }, {
           headers: {
-            'Authorization': `Bearer sk-proj-wKvGh7aW6TObTEvGnAv0T3BlbkFJryAzt3MhTn2D5BMc4KEn`
+            'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
           }
-        });
 
         const ticker = response.data.choices[0].text.trim();
         // Fetch the sector performance data for the given ticker
