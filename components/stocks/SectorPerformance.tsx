@@ -1,13 +1,20 @@
 import { cn } from "@/lib/utils"
+// api_Key="P5IY74QSU3Q7KSNC"
 
 async function fetchSectorPerformance() {
   try {
-    const res = await fetch('https://finance.yahoo.com/quote/appl');
+    const API_KEY = 'P5IY74QSU3Q7KSNC';
+    const res = await fetch(`https://www.alphavantage.co/query?function=SECTOR&apikey=${API_KEY}`);
     if (!res.ok) {
       console.error("Failed to fetch sector performance");
       return [];
     }
-    return res.json();
+    const data = await res.json();
+    // Transform the data into the expected format
+    return Object.entries(data['Rank A: Real-Time Performance'] || {}).map(([sector, changesPercentage]) => ({
+      sector,
+      changesPercentage: (parseFloat(changesPercentage as string) * 100).toFixed(2)
+    }));
   } catch (error) {
     console.error('Error fetching sector performance:', error);
     return [];
@@ -25,7 +32,6 @@ export default async function SectorPerformance() {
   if (!data.length) {
     return null
   }
-
   const totalChangePercentage = data.reduce((total, sector) => {
     return total + parseFloat(sector.changesPercentage)
   }, 0)
