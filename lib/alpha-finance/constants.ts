@@ -1,4 +1,4 @@
-import type { Interval, Range } from "@/types/yahoo-finance"
+import type { Interval, Range } from "@/types/alpha-vantage"
 
 export const DEFAULT_TICKER = "AAPL"
 export const DEFAULT_RANGE = "1d"

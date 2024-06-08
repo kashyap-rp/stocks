@@ -1,4 +1,4 @@
-import { fetchQuoteSummary } from "@/lib/yahoo-finance/fetchQuoteSummary"
+import { fetchQuoteSummary } from "@/lib/alpha-finance/fetchQuoteSummary"
 
 function formatNumber(num: number) {
   if (num >= 1e12) {

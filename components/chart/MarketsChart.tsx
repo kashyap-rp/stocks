@@ -1,7 +1,7 @@
-import { fetchChartData } from "@/lib/yahoo-finance/fetchChartData"
-import { Interval, Range } from "@/types/yahoo-finance"
+import { fetchChartData } from "@/lib/alpha-finance/fetchChartData"
+import { Interval, Range } from "@/types/alpha-vantage"
 import AreaClosedChart from "./AreaClosedChart"
-import { fetchQuote } from "@/lib/yahoo-finance/fetchQuote"
+import { fetchQuote } from "@/lib/alpha-finance/fetchQuote"
 
 export default async function MarketsChart({
   ticker,

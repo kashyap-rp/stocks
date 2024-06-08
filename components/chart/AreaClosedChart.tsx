@@ -11,7 +11,7 @@ import { scaleLinear } from "@visx/scale"
 import { ParentSize } from "@visx/responsive"
 import { Button } from "../ui/button"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { DEFAULT_RANGE } from "@/lib/yahoo-finance/constants"
+import { DEFAULT_RANGE } from "@/lib/alpha-finance/constants"
 import { Range } from "@/lib/yahoo-finance/types"
 
 // UTILS

@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
-import type { Interval } from "@/types/yahoo-finance"
+import type { Interval } from "@/types/alpha-vantage"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
