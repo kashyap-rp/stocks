@@ -1,5 +1,7 @@
+'use client'
+
 import { cn } from "@/lib/utils"
-// api_Key="P5IY74QSU3Q7KSNC"
+import { useEffect, useState } from 'react';
 
 async function fetchSectorPerformance() {
   try {
@@ -26,8 +28,12 @@ interface Sector {
   changesPercentage: string
 }
 
-export default async function SectorPerformance() {
-  const data = (await fetchSectorPerformance()) as Sector[]
+function SectorPerformanceComponent() {
+  const [data, setData] = useState<Sector[]>([]);
+
+  useEffect(() => {
+    fetchSectorPerformance().then(setData);
+  }, []);
 
   if (!data.length) {
     return null
@@ -68,3 +74,5 @@ export default async function SectorPerformance() {
     </div>
   )
 }
+
+export default SectorPerformanceComponent;
