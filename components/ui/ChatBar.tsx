@@ -1,10 +1,10 @@
-import * as React from "react";
+import React from 'react';
 import axios from 'axios';
 
 const ChatBar = () => {
   const [input, setInput] = React.useState('');
 
-  const handleKeyPress = async (event) => {
+  const handleKeyPress = async (event: { key: string; }) => {
     // Correctly check for the 'Enter' key press
     if(event.key === 'Enter'){
       const response = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
