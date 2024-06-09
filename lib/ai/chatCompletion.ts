@@ -16,19 +16,21 @@ export default async function streamChatCompletion({
   ) => void
   onCompletion: (completion: string, finalConversation: Message[]) => void
 }) {
-  let content: Message[]
+  let inputMessages: Message[]
   if (typeof input === "string") {
-    content = [{ role: "system", content: input }]
+    inputMessages = [{ role: "system", content: input }]
   } else {
-    content = input
+    inputMessages = input
   }
 
-  onStart(content)
+  onStart(inputMessages)
+
+  let outputMessage = ""
 
   const response = await axios.post(
-    "https://api.openai.com/v1/engines/gpt-4-xxxx/chat",
+    "https://api.openai.com/v1/engines/gpt-4o/chat",
     {
-      prompt: content.map((msg) => msg.content).join("\n"),
+      prompt: inputMessages.map((msg) => msg.content).join("\n"),
       max_tokens: 60,
       stream: true,
     },
@@ -42,14 +44,21 @@ export default async function streamChatCompletion({
   response.data.on("data", (chunk: any) => {
     const { choices } = JSON.parse(chunk.toString())
     if (choices && choices.length > 0) {
-      const nextPart = choices[0].text
-      content.push({ role: "system", content: nextPart })
-      onUpdate(nextPart, nextPart, content)
+      // i don't know if this is correct, just try it and see what the right keys are
+      const delta = choices[0].delta
+      outputMessage += delta.content
+      onUpdate(
+        delta.content,
+        outputMessage,
+        inputMessages.concat([{ role: "assistant", content: outputMessage }])
+      )
     }
   })
 
   response.data.on("end", () => {
-    const finalOutput = content.map((msg) => msg.content).join("")
-    onCompletion(finalOutput, content)
+    onCompletion(
+      outputMessage,
+      inputMessages.concat([{ role: "assistant", content: outputMessage }])
+    )
   })
 }

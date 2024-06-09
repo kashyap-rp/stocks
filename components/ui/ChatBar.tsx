@@ -2,6 +2,7 @@
 
 import React from "react"
 import axios from "axios"
+import streamChatCompletion from "@/lib/ai/chatCompletion"
 
 const ChatBar = () => {
   const [input, setInput] = React.useState("")
@@ -11,14 +12,14 @@ const ChatBar = () => {
     if (event.key === "Enter") {
       streamChatCompletion({
         input: input,
-        onStart: () => {
-          console.log("Starting chat...")
+        onStart: (initialConversation) => {
+          console.log("Starting chat...", initialConversation)
         },
-        onUpdate: (text: string, nextToken: string) => {
-          setInput(text)
+        onUpdate: (nextToken, currentCompletion, currentConversation) => {
+          setInput(currentCompletion)
         },
-        onCompletion: (completion: string) => {
-          console.log(completion)
+        onCompletion: (completion, finalConversation) => {
+          console.log(completion, finalConversation)
         },
       })
     }
