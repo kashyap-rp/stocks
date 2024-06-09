@@ -7,7 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { DEFAULT_FREQUENCY, DEFAULT_TIME_PERIOD } from "@/lib/alpha-finance/constants"
+import {
+  DEFAULT_FREQUENCY,
+  DEFAULT_TIME_PERIOD,
+} from "@/lib/alpha-finance/constants"
 import { Interval } from "@/types/alpha-vantage"
 import { Suspense } from "react"
 import MarketsChart from "@/components/chart/MarketsChart"
@@ -16,7 +19,7 @@ import { columns } from "@/components/stocks/markets/columns"
 import SectorPerformance from "@/components/stocks/SectorPerformance"
 import {
   validateInterval,
-  validateRange,
+  validateTimePeriod,
 } from "@/lib/alpha-finance/fetchChartData"
 import { fetchStockSearch } from "@/lib/alpha-finance/fetchStockSearch"
 
@@ -100,7 +103,7 @@ export default async function Home({
   const tickers = isMarketOpen() ? tickerAfterOpen : tickersFutures
 
   const ticker = searchParams?.ticker || tickers[0].symbol
-  const range = validateRange(searchParams?.range || DEFAULT_TIME_PERIOD)
+  const range = validateTimePeriod(searchParams?.range || DEFAULT_TIME_PERIOD)
   const interval = validateInterval(
     range,
     (searchParams?.interval as Interval) || DEFAULT_FREQUENCY
@@ -188,7 +191,11 @@ export default async function Home({
           </div>
           <div className="w-full lg:w-1/2">
             <Suspense fallback={<div>Loading...</div>}>
-              <MarketsChart ticker={ticker} range={validateRange(range)} interval={validateInterval(range, interval)} />
+              <MarketsChart
+                ticker={ticker}
+                range={validateTimePeriod(range)}
+                interval={validateInterval(range, interval)}
+              />
             </Suspense>
           </div>
         </Card>

@@ -3,15 +3,22 @@ import type {
   ChartOptions,
   ChartResultArray,
 } from "@/node_modules/yahoo-finance2/dist/esm/src/modules/chart"
-import type { Interval} from "@/types/alpha-vantage"
-import { DEFAULT_TIME_PERIOD, FREQUENCIES_FOR_TIME_PERIOD, VALID_TIME_PERIODS } from "./constants"
+import type { Interval } from "@/types/alpha-vantage"
+import {
+  DEFAULT_TIME_PERIOD,
+  FREQUENCIES_FOR_TIME_PERIOD,
+  VALID_TIME_PERIODS,
+} from "./constants"
 import { CalculateRange } from "@/lib/utils"
 import yahooFinance from "yahoo-finance2"
 
-export const validateRange = (range: string): string =>
+export const validateTimePeriod = (range: string): string =>
   VALID_TIME_PERIODS.includes(range) ? range : DEFAULT_TIME_PERIOD
 
-export const validateInterval = (range: string, interval: Interval): Interval =>
+export const validateInterval = (
+  range: string,
+  interval: Interval
+): Interval =>
   FREQUENCIES_FOR_TIME_PERIOD[range].includes(interval)
     ? interval
     : FREQUENCIES_FOR_TIME_PERIOD[range][0]

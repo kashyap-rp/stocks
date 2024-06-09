@@ -3,10 +3,13 @@ import CompanySummaryCard from "@/app/stocks/[ticker]/components/CompanySummaryC
 import FinanceSummary from "@/app/stocks/[ticker]/components/FinanceSummary"
 import News from "@/app/stocks/[ticker]/components/News"
 import { Card, CardContent } from "@/components/ui/card"
-import { DEFAULT_INTERVAL, DEFAULT_RANGE } from "@/lib/alpha-finance/constants"
+import {
+  DEFAULT_FREQUENCY,
+  DEFAULT_TIME_PERIOD,
+} from "@/lib/alpha-finance/constants"
 import {
   validateInterval,
-  validateRange,
+  validateTimePeriod,
 } from "@/lib/alpha-finance/fetchChartData"
 import { Interval } from "@/types/alpha-vantage"
 import { Suspense } from "react"
@@ -19,7 +22,7 @@ type Props = {
   }
   searchParams?: {
     ticker?: string
-    range?: string
+    timePeriod?: string
     interval?: string
   }
 }
@@ -45,10 +48,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function StocksPage({ params, searchParams }: Props) {
   const ticker = params.ticker
-  const range = validateRange(searchParams?.range || DEFAULT_RANGE)
+  const timePeriod = validateTimePeriod(
+    searchParams?.timePeriod || DEFAULT_TIME_PERIOD
+  )
   const interval = validateInterval(
-    range,
-    (searchParams?.interval as Interval) || DEFAULT_INTERVAL
+    timePeriod,
+    (searchParams?.interval as Interval) || DEFAULT_FREQUENCY
   )
 
   return (
@@ -62,7 +67,11 @@ export default async function StocksPage({ params, searchParams }: Props) {
               </div>
             }
           >
-            <StockChart ticker={ticker} range={range} interval={interval} />
+            <StockChart
+              ticker={ticker}
+              timePeriod={timePeriod}
+              interval={interval}
+            />
           </Suspense>
           <Suspense
             fallback={

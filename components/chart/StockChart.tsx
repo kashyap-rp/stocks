@@ -7,7 +7,7 @@ import { fetchQuote } from "@/lib/alpha-finance/fetchQuote"
 
 interface StockGraphProps {
   ticker: string
-  range: string
+  timePeriod: string
   interval: Interval
 }
 
@@ -26,10 +26,10 @@ function calculatePriceChange(qouteClose: number, currentPrice: number) {
 
 export default async function StockChart({
   ticker,
-  range,
+  timePeriod,
   interval,
 }: StockGraphProps) {
-  const chartData = await fetchChartData(ticker, range, interval)
+  const chartData = await fetchChartData(ticker, timePeriod, interval)
   const quoteData = await fetchQuote(ticker)
 
   const [chart, quote] = await Promise.all([chartData, quoteData])
@@ -140,21 +140,23 @@ export default async function StockChart({
             </span>
           </div>
           <span className="space-x-1 whitespace-nowrap font-semibold">
-            {priceChange !== 0 && rangeTextMapping[range as keyof typeof rangeTextMapping] !== "" && (
-              <span
-                className={cn(
-                  priceChange > 0
-                    ? "text-green-800 dark:text-green-400"
-                    : "text-red-800 dark:text-red-500"
-                )}
-              >
-                {priceChange > 0
-                  ? `+${priceChange.toFixed(2)}%`
-                  : `${priceChange.toFixed(2)}%`}
-              </span>
-            )}
+            {priceChange !== 0 &&
+              rangeTextMapping[timePeriod as keyof typeof rangeTextMapping] !==
+                "" && (
+                <span
+                  className={cn(
+                    priceChange > 0
+                      ? "text-green-800 dark:text-green-400"
+                      : "text-red-800 dark:text-red-500"
+                  )}
+                >
+                  {priceChange > 0
+                    ? `+${priceChange.toFixed(2)}%`
+                    : `${priceChange.toFixed(2)}%`}
+                </span>
+              )}
             <span className="text-muted-foreground">
-              {rangeTextMapping[range as keyof typeof rangeTextMapping]}
+              {rangeTextMapping[timePeriod as keyof typeof rangeTextMapping]}
             </span>
           </span>
         </div>
@@ -165,7 +167,7 @@ export default async function StockChart({
         </div>
       )}
       {chart.quotes.length > 0 && (
-        <AreaClosedChart chartQuotes={ChartQuotes} range={range} />
+        <AreaClosedChart chartQuotes={ChartQuotes} range={timePeriod} />
       )}
     </div>
   )

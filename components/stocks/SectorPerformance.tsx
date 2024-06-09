@@ -1,23 +1,31 @@
+"use server"
+
 import { cn } from "@/lib/utils"
 // api_Key="P5IY74QSU3Q7KSNC"
 
 async function fetchSectorPerformance() {
   try {
-    const API_KEY = process.env.ALPHA_VANTAGE_KEY;
-    const res = await fetch(`https://www.alphavantage.co/query?function=SECTOR&apikey=${API_KEY}`);
+    const API_KEY = process.env.ALPHA_VANTAGE_KEY
+    const res = await fetch(
+      `https://www.alphavantage.co/query?function=SECTOR&apikey=${API_KEY}`
+    )
     if (!res.ok) {
-      console.error("Failed to fetch sector performance");
-      return [];
+      console.error("Failed to fetch sector performance")
+      return []
     }
-    const data = await res.json();
+    const data = await res.json()
     // Transform the data into the expected format
-    return Object.entries(data['Rank A: Real-Time Performance'] || {}).map(([sector, changesPercentage]) => ({
-      sector,
-      changesPercentage: (parseFloat(changesPercentage as string) * 100).toFixed(2)
-    }));
+    return Object.entries(data["Rank A: Real-Time Performance"] || {}).map(
+      ([sector, changesPercentage]) => ({
+        sector,
+        changesPercentage: (
+          parseFloat(changesPercentage as string) * 100
+        ).toFixed(2),
+      })
+    )
   } catch (error) {
-    console.error('Error fetching sector performance:', error);
-    return [];
+    console.error("Error fetching sector performance:", error)
+    return []
   }
 }
 
