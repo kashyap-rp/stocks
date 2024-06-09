@@ -1,9 +1,4 @@
-interface OptionCall {
-  strikePrice: number
-  premium: number
-  currentPrice: number
-  investmentAmount: number
-}
+import type { OptionCall } from "@/types"
 
 export const calculateOptionCallROI = (option: OptionCall): number => {
   const { strikePrice, premium, currentPrice, investmentAmount } = option

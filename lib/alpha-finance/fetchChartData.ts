@@ -26,7 +26,7 @@ export const validateInterval = (
 export async function fetchChartData(
   ticker: string,
   range: string,
-  interval: Interval
+  interval: Interval // TODO: interval is provided, but not used!
 ) {
   noStore()
 
