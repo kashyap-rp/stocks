@@ -1,18 +1,4 @@
-interface HistoricalDataPoint {
-  timestamp: string
-  open: number
-  high: number
-  low: number
-  close: number
-  volume: number
-}
-
-interface Trade {
-  entryTimestamp: string
-  entryPrice: number
-  exitTimestamp: string
-  exitPrice: number
-}
+import { HistoricalDataPoint, Trade } from "@/types"
 
 export const calculateROI = async (
   historicalData: HistoricalDataPoint[],
@@ -38,32 +24,3 @@ export const calculateROI = async (
 
   return roi
 }
-
-// const historicalData: HistoricalDataPoint[] = [
-//     {
-//         timestamp: "2024-06-01",
-//         open: 100,
-//         high: 105,
-//         low: 95,
-//         close: 100,
-//         volume: 1000,
-//     },
-//     // ... more data points
-//     {
-//         timestamp: "2024-06-08",
-//         open: 105,
-//         high: 110,
-//         low: 100,
-//         close: 105,
-//         volume: 1000,
-//     },
-// ];
-
-// const trade: Trade = {
-//     entryTimestamp: "2024-06-01",
-//     entryPrice: 100,
-//     exitTimestamp: "2024-06-08",
-//     exitPrice: 105,
-// };
-
-// calculateROI(historicalData, trade).then(roi => console.log(`ROI: ${roi.toFixed(2)}%`));

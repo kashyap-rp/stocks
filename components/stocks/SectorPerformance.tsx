@@ -1,9 +1,12 @@
 "use server"
 
 import { cn } from "@/lib/utils"
-// api_Key="P5IY74QSU3Q7KSNC"
+import yahooFinance from "yahoo-finance2"
+import { SectorStats, HistoricalRowHistory } from "@/types"
+import { calculateROI } from "@/lib/alpha-finance/roi"
+import { calculateOptionCallROI } from "@/lib/alpha-finance/optionalCallROI"
 
-async function fetchSectorPerformance() {
+async function fetchSectorPerformance(): Promise<SectorStats[]> {
   try {
     const API_KEY = process.env.ALPHA_VANTAGE_KEY
     const res = await fetch(
@@ -14,13 +17,14 @@ async function fetchSectorPerformance() {
       return []
     }
     const data = await res.json()
-    // Transform the data into the expected format
     return Object.entries(data["Rank A: Real-Time Performance"] || {}).map(
       ([sector, changesPercentage]) => ({
         sector,
         changesPercentage: (
           parseFloat(changesPercentage as string) * 100
         ).toFixed(2),
+        currentPrice: 0, // We're going to update later
+        historicalData: [], // We're going to update later
       })
     )
   } catch (error) {
@@ -29,33 +33,59 @@ async function fetchSectorPerformance() {
   }
 }
 
-interface Sector {
-  sector: string
-  changesPercentage: string
+async function fetchHistoricalData(sector: string) {
+  const query = sector.replace(/\s+/g, "") // Simplify sector name for query
+  try {
+    const historicalData: HistoricalRowHistory[] =
+      await yahooFinance.historical(query, {
+        period1: "2020-01-01",
+        period2: "2023-01-01",
+        interval: "1mo",
+      })
+    return historicalData
+  } catch (error) {
+    console.error("Error fetching historical data for sector:", sector, error)
+    return []
+  }
 }
 
 export default async function SectorPerformance() {
-  const data = (await fetchSectorPerformance()) as Sector[]
+  let sectors = await fetchSectorPerformance()
 
-  if (!data.length) {
+  for (let sector of sectors) {
+    const historicalData = await fetchHistoricalData(sector.sector)
+    sector.historicalData = historicalData
+    sector.currentPrice = historicalData[0]?.close || 0 // Assume the most recent close price is the current price TODO: IDK if index 0 gets the most recent or the first price
+  }
+
+  const rois = sectors.map((sector) => {
+    if (!sector.historicalData?.length) return null
+    const trade = {
+      entryTimestamp:
+        sector.historicalData[sector.historicalData.length - 1].date,
+      exitTimestamp: sector.historicalData[0].date,
+    }
+    return calculateROI(sector.historicalData, trade)
+  })
+
+  const optionCallROIs = sectors.map((sector) => {
+    if (!sector.currentPrice) return null
+    const option = {
+      strikePrice: sector.currentPrice * 0.95, // Example: strike price is 95% of current price
+      premium: sector.currentPrice * 0.05, // Example: premium is 5% of current price
+      currentPrice: sector.currentPrice,
+      investmentAmount: 1000, // Example fixed investment amount
+    }
+    return calculateOptionCallROI(option)
+  })
+
+  if (!sectors.length) {
     return null
   }
-  const totalChangePercentage = data.reduce((total, sector) => {
-    return total + parseFloat(sector.changesPercentage)
-  }, 0)
-
-  const averageChangePercentage =
-    (totalChangePercentage / data.length).toFixed(2) + "%"
-
-  const allSectors = {
-    sector: "All sectors",
-    changesPercentage: averageChangePercentage,
-  }
-  data.unshift(allSectors)
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-      {data.map((sector: Sector) => (
+      {sectors.map((sector, index) => (
         <div
           key={sector.sector}
           className="flex w-full flex-row items-center justify-between text-sm"
@@ -69,7 +99,17 @@ export default async function SectorPerformance() {
                 : "bg-gradient-to-l from-red-300 text-red-800 dark:from-red-950 dark:text-red-500"
             )}
           >
-            {parseFloat(sector.changesPercentage).toFixed(2) + "%"}
+            {sector.changesPercentage + "%"}
+          </span>
+          <span>
+            {rois[index]
+              ? `${rois[index].toFixed(2)}% ROI`
+              : "ROI Data Unavailable"}
+          </span>
+          <span>
+            {optionCallROIs[index]
+              ? `${optionCallROIs[index].toFixed(2)}% Option ROI`
+              : "Option ROI Data Unavailable"}
           </span>
         </div>
       ))}
