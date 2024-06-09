@@ -1,3 +1,8 @@
+HOME PAGE (easystocks.co)
+GOAL: We want to be able to easily calculate option trading calls and the return on investment without having to do the math and do this in real-time chatting with AI
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
 Add authentication using Supabase (low priority)
 Add Rate Limiting (Medium priority)
 Add the Tradiding Algorithm/Calculations (roi.ts which is an example file)
