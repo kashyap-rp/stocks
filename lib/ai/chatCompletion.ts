@@ -1,3 +1,5 @@
+"use server"
+
 import axios from "axios"
 import { Message } from "@/lib/ai/openai"
 
