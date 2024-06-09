@@ -3,7 +3,6 @@ GOAL: We want to be able to easily calculate option trading calls and the return
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-Add authentication using Supabase (low priority)
 Add Rate Limiting (Medium priority)
 Add the Tradiding Algorithm/Calculations (roi.ts which is an example file)
 Connect the ChatBar with the Sector Performance section to return the ROI results (roi.ts)
