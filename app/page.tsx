@@ -22,6 +22,7 @@ import {
   validateTimePeriod,
 } from "@/lib/alpha-finance/fetchChartData"
 import { fetchStockSearch } from "@/lib/alpha-finance/fetchStockSearch"
+import { Quote, QuoteWithTitle } from "@/types"
 
 function isMarketOpen() {
   const now = new Date()
@@ -113,9 +114,9 @@ export default async function Home({
   const promises = tickers.map(({ symbol }) =>
     yahooFinance.quoteCombine(symbol)
   )
-  const results = await Promise.all(promises)
+  const results: Quote[] = await Promise.all(promises)
 
-  const resultsWithTitles = results.map((result, index) => ({
+  const resultsWithTitles: QuoteWithTitle[] = results.map((result, index) => ({
     ...result,
     shortName: tickers[index].shortName,
   }))
@@ -175,7 +176,7 @@ export default async function Home({
             </CardHeader>
             <CardContent>
               <Suspense fallback={<div>Loading...</div>}>
-                <SectorPerformance />
+                <SectorPerformance sectorData={resultsWithTitles[0]} />
               </Suspense>
             </CardContent>
           </Card>
