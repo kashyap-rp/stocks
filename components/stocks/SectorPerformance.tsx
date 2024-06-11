@@ -1,22 +1,29 @@
 import { calculateOptionCallROI } from "@/lib/alpha-finance/optionalCallROI"
+import Message from "@/lib/ai/chatCompletion"
 import { calculateROI } from "@/lib/alpha-finance/roi"
-import { OptionCall, QuoteWithTitle } from "@/types"
+import { OptionCall, QuoteWithTitle, Trade } from "@/types"
 
-export default async function SectorPerformance(sectorData: QuoteWithTitle) {
+
+export default async function SectorPerformance(sectorData: QuoteWithTitle, trade: Trade, userProvidedStrikePrice: number, calculatedPremium: number) {
   const roi = calculateROI(sectorData.historicalDataPoint, trade)
 
   const bestCaseCurrentOptionalCall: OptionCall = {
-    strikePrice: sectorData.strikePrice || userProvidedStrikePrice, // userProvidedStrikePrice needs to be defined or fetched
-    premium: sectorData.premium || calculatedPremium, // calculatedPremium needs to be defined or calculated
+    strikePrice: sectorData.strikePrice || userProvidedStrikePrice,
+    premium: sectorData.premium || calculatedPremium,
     currentPrice: sectorData.lastMarket,
     investmentAmount:
       sectorData.investmentAmount ||
-      sectorData.numContracts * sectorData.premium, // Assuming numContracts is available
+      sectorData.numContracts * sectorData.premium,
   }
 
   const optionalCallRoi = calculateOptionCallROI(bestCaseCurrentOptionalCall)
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">Hello world!</div>
+    <Message 
+      input="Your AI response here..."
+      onStart={(initialConversation) => {/* handle start */}}
+      onUpdate={(nextToken, currentCompletion, currentConversation) => {/* handle update */}}
+      onCompletion={(completion, finalConversation) => {/* handle completion */}}
+    />
   )
 }
