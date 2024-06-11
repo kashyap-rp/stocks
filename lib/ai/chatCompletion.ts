@@ -46,8 +46,7 @@ export default async function streamChatCompletion({
   response.data.on("data", (chunk: any) => {
     const { choices } = JSON.parse(chunk.toString())
     if (choices && choices.length > 0) {
-      // i don't know if this is correct, just try it and see what the right keys are
-      const delta = choices[0].delta
+      const delta = choices[0].message
       outputMessage += delta.content
       onUpdate(
         delta.content,

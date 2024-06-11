@@ -1,3 +1,4 @@
+import React from "react"
 import { calculateOptionCallROI } from "@/lib/alpha-finance/optionalCallROI"
 import Message from "@/lib/ai/chatCompletion"
 import { calculateROI } from "@/lib/alpha-finance/roi"
@@ -21,9 +22,15 @@ export default async function SectorPerformance(sectorData: QuoteWithTitle, trad
   return (
     <Message 
       input="Your AI response here..."
-      onStart={(initialConversation) => {/* handle start */}}
-      onUpdate={(nextToken, currentCompletion, currentConversation) => {/* handle update */}}
-      onCompletion={(completion, finalConversation) => {/* handle completion */}}
+      onStart={(initialConversation) => {
+        console.log('Conversation started:', initialConversation);
+      }}
+      onUpdate={(nextToken, currentCompletion, currentConversation) => {
+        console.log('Conversation updated:', nextToken, currentCompletion, currentConversation);
+      }}
+      onCompletion={(completion, finalConversation) => {
+        console.log('Conversation completed:', completion, finalConversation);
+      }}
     />
   )
 }
