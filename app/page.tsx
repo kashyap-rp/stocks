@@ -16,7 +16,7 @@ import { Suspense } from "react"
 import MarketsChart from "@/components/chart/MarketsChart"
 import Link from "next/link"
 import { columns } from "@/components/stocks/markets/columns"
-import SectorPerformance from "@/components/stocks/SectorPerformance"
+import SectorPerformance from "@/components/stocks/SectorPerformance.client"
 import {
   validateInterval,
   validateTimePeriod,
@@ -176,7 +176,12 @@ export default async function Home({
             </CardHeader>
             <CardContent>
               <Suspense fallback={<div>Loading...</div>}>
-                <SectorPerformance sectorData={resultsWithTitles[0]} />
+                <SectorPerformance 
+                  sectorData={resultsWithTitles[0]} 
+                  trade={{} as Trade} 
+                  userProvidedStrikePrice={0} 
+                  calculatedPremium={0} 
+                />
               </Suspense>
             </CardContent>
           </Card>
@@ -194,8 +199,8 @@ export default async function Home({
             <Suspense fallback={<div>Loading...</div>}>
               <MarketsChart
                 ticker={ticker}
-                range={validateTimePeriod(range)}
-                interval={validateInterval(range, interval)}
+                range={range as unknown as Range}
+                interval={interval}
               />
             </Suspense>
           </div>
@@ -204,3 +209,4 @@ export default async function Home({
     </div>
   )
 }
+
