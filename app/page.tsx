@@ -22,7 +22,7 @@ import {
   validateTimePeriod,
 } from "@/lib/alpha-finance/fetchChartData"
 import { fetchStockSearch } from "@/lib/alpha-finance/fetchStockSearch"
-import { Quote, QuoteWithTitle } from "@/types"
+import { Quote, QuoteWithTitle, Trade } from "@/types"
 
 function isMarketOpen() {
   const now = new Date()
@@ -178,7 +178,7 @@ export default async function Home({
               <Suspense fallback={<div>Loading...</div>}>
                 <SectorPerformance 
                   sectorData={resultsWithTitles[0]} 
-                  trade={{} as Trade} 
+                  trade={undefined as unknown as Trade} 
                   userProvidedStrikePrice={0} 
                   calculatedPremium={0} 
                 />
@@ -209,4 +209,5 @@ export default async function Home({
     </div>
   )
 }
+
 
