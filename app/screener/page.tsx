@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { columns } from "@/app/screener/components/columns"
 import { DataTable } from "@/app/screener/components/data-table"
-import { DEFAULT_SCREENER } from "@/lib/alpha-finance/constants"
+// import { DEFAULT_SCREENER } from "@/lib/alpha-finance/constants"
 import { fetchScreenerStocks } from "@/lib/alpha-finance/fetchScreenerStocks"
 
 export const metadata: Metadata = {
@@ -15,13 +15,13 @@ export default async function ScreenerPage({
     screener?: string
   }
 }) {
-  const screener = searchParams?.screener || DEFAULT_SCREENER
+  // const screener = searchParams?.screener || DEFAULT_SCREENER
 
-  const screenerDataResults = await fetchScreenerStocks(screener)
+  // const screenerDataResults = await fetchScreenerStocks(screener)
 
   return (
-    <div>
-      <DataTable columns={columns} data={screenerDataResults.quotes} />
-    </div>
+    // <div>
+    //   <DataTable columns={columns} data={screenerDataResults.quotes} />
+    // </div>
   )
 }
