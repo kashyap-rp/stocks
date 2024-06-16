@@ -1,3 +1,4 @@
+'use client'
 import { DataTable } from "@/components/stocks/markets/data-table"
 import yahooFinance from "yahoo-finance2"
 import {
