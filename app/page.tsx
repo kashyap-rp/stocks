@@ -17,7 +17,7 @@ import { Suspense } from "react"
 import MarketsChart from "@/components/chart/MarketsChart"
 import Link from "next/link"
 import { columns } from "@/components/stocks/markets/columns"
-import SectorPerformance from "@/components/stocks/SectorPerformance.client"
+import SectorPerformance from "@/components/stocks/RateOfReturn"
 import {
   validateInterval,
   validateTimePeriod,
@@ -173,7 +173,7 @@ export default async function Home({
         <div className="w-full lg:w-1/2">
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Sector Performance</CardTitle>
+              <CardTitle className="text-lg text-white-500">Rate of Return (%)</CardTitle>
             </CardHeader>
             <CardContent>
               <Suspense fallback={<div>Loading...</div>}>
