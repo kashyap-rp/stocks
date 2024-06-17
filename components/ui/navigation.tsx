@@ -2,11 +2,11 @@
 import { ThemeToggle } from "./theme-toggle"
 import {
   NavigationMenu,
-  NavigationMenuContent,
+  // NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
+  // NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import Link from "next/link"
@@ -14,10 +14,10 @@ import GoBack from "./go-back"
 import { usePathname } from "next/navigation"
 import CommandMenu from "./command-menu"
 
-const NAVIGATION = [
-  { title: "Markets", href: "/" },
-  { title: "Screener", href: "/screener" },
-]
+// const NAVIGATION = [
+//   { title: "Markets", href: "/" },
+//   { title: "Screener", href: "/screener" },
+// ]
 
 export default function Navigation() {
   const pathname = usePathname()
@@ -30,8 +30,8 @@ export default function Navigation() {
           <div className="flex flex-row items-center gap-2">
             <NavigationMenu>
               <NavigationMenuList>
-                {NAVIGATION.map((item) => (
-                  <NavigationMenuItem key={item.title}>
+                {/* {NAVIGATION.map((item) => ( */}
+                  {/* <NavigationMenuItem key={item.title}>
                     <Link href={item.href} legacyBehavior passHref>
                       <NavigationMenuLink
                         className={navigationMenuTriggerStyle()}
@@ -40,7 +40,7 @@ export default function Navigation() {
                       </NavigationMenuLink>
                     </Link>
                   </NavigationMenuItem>
-                ))}
+                ))} */}
               </NavigationMenuList>
             </NavigationMenu>
             <CommandMenu />
