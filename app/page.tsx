@@ -81,7 +81,7 @@ const tickerAfterOpen = [
 ]
 
 function getMarketSentiment(changePercentage: number | undefined) {
-  if (!changePercentage) {
+  if (changePercentage === undefined) {
     return "neutral"
   }
   if (changePercentage > 0.1) {
@@ -200,7 +200,7 @@ export default async function Home({
             <Suspense fallback={<div>Loading...</div>}>
               <MarketsChart
                 ticker={ticker}
-                range={range as unknown as Range}
+                range={range as string}
                 interval={interval}
               />
             </Suspense>
@@ -210,5 +210,3 @@ export default async function Home({
     </div>
   )
 }
-
-

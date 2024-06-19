@@ -20,6 +20,7 @@ const ChatBar = () => {
         },
         onCompletion: (completion, finalConversation) => {
           console.log(completion, finalConversation)
+          props.onMessageComplete(completion)
         },
       })
     }
