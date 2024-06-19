@@ -4,7 +4,15 @@ import streamChatCompletion from "@/lib/ai/chatCompletion"
 import { calculateROI } from "@/lib/alpha-finance/roi"
 import { OptionCall, QuoteWithTitle, Trade } from "@/types"
 
-export default function SectorPerformance({ sectorData, trade, userProvidedStrikePrice, calculatedPremium }: { sectorData: QuoteWithTitle, trade: Trade, userProvidedStrikePrice: number, calculatedPremium: number }) {
+interface SectorPerformanceProps {
+  sectorData: QuoteWithTitle;
+  trade: Trade;
+  userProvidedStrikePrice: number;
+  calculatedPremium: number;
+  chatMessage: (message: string) => void;
+}
+
+const SectorPerformance: React.FC<SectorPerformanceProps> = ({ sectorData, trade, userProvidedStrikePrice, calculatedPremium, chatMessage }) => {
   const [message, setMessage] = useState("");
   
   useEffect(() => {
@@ -32,6 +40,7 @@ export default function SectorPerformance({ sectorData, trade, userProvidedStrik
       onCompletion: (completion, finalConversation) => {
         console.log('Conversation completed:', completion, finalConversation);
         setMessage(completion);
+        chatMessage(completion); // Use the chatMessage function here
       },
     })
   }, [sectorData, trade, userProvidedStrikePrice, calculatedPremium]);
@@ -40,3 +49,5 @@ export default function SectorPerformance({ sectorData, trade, userProvidedStrik
     <div>{message}</div>
   )
 }
+
+export default SectorPerformance;

@@ -13,7 +13,7 @@ import {
   DEFAULT_TIME_PERIOD,
 } from "@/lib/alpha-finance/constants"
 import { Interval } from "@/types/alpha-vantage"
-import { Suspense } from "react"
+import { Suspense, useState } from "react"
 import MarketsChart from "@/components/chart/MarketsChart"
 import Link from "next/link"
 import { columns } from "@/components/stocks/markets/columns"
@@ -24,6 +24,7 @@ import {
 } from "@/lib/alpha-finance/fetchChartData"
 import { fetchStockSearch } from "@/lib/alpha-finance/fetchStockSearch"
 import { Quote, QuoteWithTitle, Trade } from "@/types"
+import ChatBar from "@/components/MainChatInput"
 
 function isMarketOpen() {
   const now = new Date()
@@ -36,7 +37,7 @@ function isMarketOpen() {
     hour12: false,
   }
   const formatter = new Intl.DateTimeFormat([], options)
-
+  const [chatMessage, setChatMessage] = useState("");
   const timeString = formatter.format(now)
   const [hour, minute] = timeString.split(":").map(Number)
   const timeInET = hour + minute / 60
@@ -140,8 +141,13 @@ export default async function Home({
         ? "bg-red-300/50 dark:bg-red-950/50"
         : "bg-neutral-500/10"
 
+  function setChatMessage(message: string): void {
+    throw new Error("Function not implemented.")
+  }
+
   return (
     <div className="flex flex-col gap-4">
+      <ChatBar onMessageComplete={setChatMessage} />
       <div className="flex flex-col gap-4 lg:flex-row">
         <div className="w-full lg:w-1/2">
           <Card className="relative flex h-full min-h-[15rem] flex-col justify-between overflow-hidden">
@@ -182,6 +188,7 @@ export default async function Home({
                   trade={undefined as unknown as Trade} 
                   userProvidedStrikePrice={0} 
                   calculatedPremium={0} 
+                  chatMessage={setChatMessage}
                 />
               </Suspense>
             </CardContent>
