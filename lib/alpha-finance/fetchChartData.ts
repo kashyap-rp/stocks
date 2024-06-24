@@ -1,3 +1,4 @@
+'use server'
 import { unstable_noStore as noStore } from "next/cache"
 import type {
   ChartOptions,
@@ -34,15 +35,16 @@ export async function fetchChartData(
     period1: CalculateRange(range),
     // interval: interval,
   }
-
+  console.log("*******--3--******", ticker, range, interval);
   try {
     const chartData: ChartResultArray = await yahooFinance.chart(
       ticker,
       queryOptions
     )
-
+    console.log("*******--4--******", chartData);
     return chartData
   } catch (error) {
+    console.log("*******--5--******", error);
     console.log("Failed to fetch chart data", error)
     throw new Error("Failed to fetch chart data.")
   }

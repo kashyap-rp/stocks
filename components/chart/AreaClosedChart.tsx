@@ -334,8 +334,8 @@ export default function AreaClosedChart({ chartQuotes, range }: any) {
             {({ width, height }) => (
               <GraphSlider
                 data={chartQuotes}
-                width={width}
-                height={height}
+                width={500}
+                height={300}
                 top={0}
                 state={state}
                 dispatch={dispatch}
