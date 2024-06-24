@@ -9,7 +9,7 @@ interface SectorPerformanceProps {
   trade: Trade;
   userProvidedStrikePrice: number;
   calculatedPremium: number;
-  chatMessage: (message: string) => void;
+  chatMessage: String;
 }
 
 const SectorPerformance: React.FC<SectorPerformanceProps> = ({ sectorData, trade, userProvidedStrikePrice, calculatedPremium, chatMessage }) => {
@@ -29,24 +29,24 @@ const SectorPerformance: React.FC<SectorPerformanceProps> = ({ sectorData, trade
 
     const optionalCallRoi = calculateOptionCallROI(bestCaseCurrentOptionalCall)
 
-    streamChatCompletion({
-      input: "Your AI response here...",
-      onStart: (initialConversation) => {
-        console.log('Conversation started:', initialConversation);
-      },
-      onUpdate: (nextToken, currentCompletion, currentConversation) => {
-        console.log('Conversation updated:', nextToken, currentCompletion, currentConversation);
-      },
-      onCompletion: (completion, finalConversation) => {
-        console.log('Conversation completed:', completion, finalConversation);
-        setMessage(completion);
-        chatMessage(completion); // Use the chatMessage function here
-      },
-    })
+    // streamChatCompletion({
+    //   input: "Your AI response here...",
+    //   onStart: (initialConversation) => {
+    //     console.log('Conversation started:', initialConversation);
+    //   },
+    //   onUpdate: (nextToken, currentCompletion, currentConversation) => {
+    //     console.log('Conversation updated:', nextToken, currentCompletion, currentConversation);
+    //   },
+    //   onCompletion: (completion, finalConversation) => {
+    //     console.log('Conversation completed:', completion, finalConversation);
+    //     setMessage(completion);
+    //     // chatMessage(completion); // Use the chatMessage function here
+    //   },
+    // })
   }, [sectorData, trade, userProvidedStrikePrice, calculatedPremium]);
 
   return (
-    <div>{message}</div>
+    <div>{chatMessage}</div>
   )
 }
 

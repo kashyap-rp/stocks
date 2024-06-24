@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import { DataTable } from "@/components/stocks/markets/data-table"
 import yahooFinance from "yahoo-finance2"
 import {
@@ -11,18 +11,21 @@ import {
 import {
   DEFAULT_FREQUENCY,
   DEFAULT_TIME_PERIOD,
+  FREQUENCIES_FOR_TIME_PERIOD,
+  VALID_TIME_PERIODS,
 } from "@/lib/alpha-finance/constants"
 import { Interval } from "@/types/alpha-vantage"
-import { Suspense, useState } from "react"
+import { Suspense, use, useEffect, useState } from "react"
 import MarketsChart from "@/components/chart/MarketsChart"
 import Link from "next/link"
 import { columns } from "@/components/stocks/markets/columns"
 import SectorPerformance from "@/components/stocks/RateOfReturn"
-import {
-  validateInterval,
-  validateTimePeriod,
-} from "@/lib/alpha-finance/fetchChartData"
+// import {
+//   validateInterval,
+//   validateTimePeriod,
+// } from "@/lib/alpha-finance/fetchChartData"
 import { fetchStockSearch } from "@/lib/alpha-finance/fetchStockSearch"
+import { fetchStockSearch2 } from "@/lib/alpha-finance/fetchStockSearch2"
 import { Quote, QuoteWithTitle, Trade } from "@/types"
 import ChatBar from "@/components/MainChatInput"
 
@@ -37,7 +40,6 @@ function isMarketOpen() {
     hour12: false,
   }
   const formatter = new Intl.DateTimeFormat([], options)
-  const [chatMessage, setChatMessage] = useState("");
   const timeString = formatter.format(now)
   const [hour, minute] = timeString.split(":").map(Number)
   const timeInET = hour + minute / 60
@@ -94,7 +96,19 @@ function getMarketSentiment(changePercentage: number | undefined) {
   }
 }
 
-export default async function Home({
+const validateTimePeriod = (range: string): string =>
+  VALID_TIME_PERIODS.includes(range) ? range : DEFAULT_TIME_PERIOD
+
+
+const validateInterval = (
+  range: string,
+  interval: Interval
+): Interval =>
+  FREQUENCIES_FOR_TIME_PERIOD[range].includes(interval)
+    ? interval
+    : FREQUENCIES_FOR_TIME_PERIOD[range][0]
+    
+export default function Home({
   searchParams,
 }: {
   searchParams?: {
@@ -103,51 +117,115 @@ export default async function Home({
     interval?: string
   }
 }) {
+  console.log("++++++++++++++=", searchParams, DEFAULT_FREQUENCY);
   const tickers = isMarketOpen() ? tickerAfterOpen : tickersFutures
 
   const ticker = searchParams?.ticker || tickers[0].symbol
   const range = validateTimePeriod(searchParams?.range || DEFAULT_TIME_PERIOD)
+  console.log("++++++Range", range);
   const interval = validateInterval(
     range,
     (searchParams?.interval as Interval) || DEFAULT_FREQUENCY
   )
-  const news = await fetchStockSearch("^DJI", 1)
+  console.log("++++++interval", interval);
+  // let news = {}
+  const [news, setNews] = useState<any>({})
+  const [promiseResult, setPromiseResults] = useState<any>([])
+  const [resultsWithTitles, setResultsWithTitles] = useState<any>([])
+  const [marketSentiment, setMarketSentiment] = useState<String>("neutral")
+  const [sentimentColor, setSentimentColor] = useState<String>("text-neutral-500")
+  const [sentimentBackground, setSentimentBackground] = useState<String>("bg-neutral-500/10")
+  const [chatMessage, setChatMessage] = useState<String>("");
 
-  const promises = tickers.map(({ symbol }) =>
-    yahooFinance.quoteCombine(symbol)
-  )
-  const results: Quote[] = await Promise.all(promises)
+  useEffect(() => {
+    // console.log("useEffect")
+    async function fetchYahooFinanceTickers() {
+      const _news1 = await fetchStockSearch("^DJI", 1)
+      // console.log("_news", _news1)
+      setNews(_news1)
+    }
+    fetchYahooFinanceTickers()
+  }, [])
 
-  const resultsWithTitles: QuoteWithTitle[] = results.map((result, index) => ({
-    ...result,
-    shortName: tickers[index].shortName,
-  }))
+  useEffect(() => {
+    // console.log("useEffect")
+    async function fetchYahooQuoteCombine() {
+      // console.log("====1===")
+      // console.log("====2===")
+      const _promiseResult = await fetchStockSearch2(tickers)
+      // console.log("====3===", _promiseResult)
+      setPromiseResults(_promiseResult)
 
-  const marketSentiment = getMarketSentiment(
-    resultsWithTitles[0].regularMarketChangePercent
-  )
+      const _resultsWithTitles: QuoteWithTitle[] = _promiseResult.map(
+        (result, index) => ({
+          ...result,
+          shortName: tickers[index].shortName,
+        })
+      )
+      setResultsWithTitles(_resultsWithTitles)
 
-  const sentimentColor =
-    marketSentiment === "bullish"
-      ? "text-green-500"
-      : marketSentiment === "bearish"
-        ? "text-red-500"
-        : "text-neutral-500"
+      const _marketSentiment = getMarketSentiment(
+        _resultsWithTitles[0].regularMarketChangePercent
+      )
 
-  const sentimentBackground =
-    marketSentiment === "bullish"
-      ? "bg-green-500/10"
-      : marketSentiment === "bearish"
-        ? "bg-red-300/50 dark:bg-red-950/50"
-        : "bg-neutral-500/10"
+      setMarketSentiment(_marketSentiment)
 
-  function setChatMessage(message: string): void {
-    throw new Error("Function not implemented.")
+      const _sentimentColor =
+        _marketSentiment === "bullish"
+          ? "text-green-500"
+          : _marketSentiment === "bearish"
+            ? "text-red-500"
+            : "text-neutral-500"
+      setSentimentColor(_sentimentColor)
+
+      const _sentimentBackground =
+        _marketSentiment === "bullish"
+          ? "bg-green-500/10"
+          : _marketSentiment === "bearish"
+            ? "bg-red-300/50 dark:bg-red-950/50"
+            : "bg-neutral-500/10"
+      setSentimentBackground(_sentimentBackground)
+    }
+    fetchYahooQuoteCombine()
+  }, [])
+
+
+  // function setChatMessage(message: string): void {
+  //   // throw new Error("Function not implemented.")
+  //   console.error("Function not implemented")
+  // }
+
+  const getNews = () => {
+    // console.log("~~>News", news);
+    if (Object.keys(news).length > 0) {
+      if (news.news[0] && news.news[0].title) {
+        return (
+          <CardFooter className="flex-col items-start">
+            <p className="mb-2 text-sm font-semibold text-neutral-500 dark:text-neutral-500">
+              What you need to know today
+            </p>
+            <Link
+              prefetch={false}
+              href={news.news[0].link}
+              className="text-lg font-extrabold"
+            >
+              {news.news[0].title}
+            </Link>
+          </CardFooter>
+        )
+      } else {
+        return <></>
+      }
+    } else {
+      return <></>
+    }
   }
 
   return (
     <div className="flex flex-col gap-4">
-      <ChatBar onMessageComplete={setChatMessage} />
+      <ChatBar onMessageComplete={(v: any) => {
+        setChatMessage(v);
+      }} />
       <div className="flex flex-col gap-4 lg:flex-row">
         <div className="w-full lg:w-1/2">
           <Card className="relative flex h-full min-h-[15rem] flex-col justify-between overflow-hidden">
@@ -157,20 +235,7 @@ export default async function Home({
                 <strong className={sentimentColor}>{marketSentiment}</strong>
               </CardTitle>
             </CardHeader>
-            {news.news[0] && news.news[0].title && (
-              <CardFooter className="flex-col items-start">
-                <p className="mb-2 text-sm font-semibold text-neutral-500 dark:text-neutral-500">
-                  What you need to know today
-                </p>
-                <Link
-                  prefetch={false}
-                  href={news.news[0].link}
-                  className="text-lg font-extrabold"
-                >
-                  {news.news[0].title}
-                </Link>
-              </CardFooter>
-            )}
+            {(Object.keys(news).length > 0)  && getNews()}
             <div
               className={`pointer-events-none absolute inset-0 z-0 h-[65%] w-[65%] -translate-x-[10%] -translate-y-[30%] rounded-full blur-3xl ${sentimentBackground}`}
             />
@@ -179,17 +244,23 @@ export default async function Home({
         <div className="w-full lg:w-1/2">
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg text-white-500">Rate of Return (%)</CardTitle>
+              <CardTitle className="text-white-500 text-lg">
+                Rate of Return (%)
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <Suspense fallback={<div>Loading...</div>}>
-                <SectorPerformance 
-                  sectorData={resultsWithTitles[0]} 
-                  trade={undefined as unknown as Trade} 
-                  userProvidedStrikePrice={0} 
-                  calculatedPremium={0} 
-                  chatMessage={setChatMessage}
-                />
+                {resultsWithTitles.length > 0 && (
+                  <>
+                  <SectorPerformance
+                    sectorData={resultsWithTitles[0]}
+                    trade={undefined as unknown as Trade}
+                    userProvidedStrikePrice={0}
+                    calculatedPremium={0}
+                    chatMessage={chatMessage}
+                  />
+                  </>
+                )}
               </Suspense>
             </CardContent>
           </Card>

@@ -1,4 +1,4 @@
-'use client'
+// 'use client'
 import StockChart from "@/components/chart/StockChart"
 import CompanySummaryCard from "@/app/stocks/[ticker]/components/CompanySummaryCard"
 import FinanceSummary from "@/app/stocks/[ticker]/components/FinanceSummary"
