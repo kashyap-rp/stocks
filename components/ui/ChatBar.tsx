@@ -4,11 +4,15 @@ import React from "react"
 import axios from "axios"
 import streamChatCompletion from "@/lib/ai/chatCompletion"
 
-const ChatBar = () => {
+import { InputText } from 'primereact/inputtext';
+        
+
+const ChatBar = (props: any) => {
   const [input, setInput] = React.useState("")
 
   const handleKeyPress = async (event: { key: string }) => {
     // Correctly check for the 'Enter' key press
+    console.log("handleKeyPress", event)
     if (event.key === "Enter") {
       streamChatCompletion({
         input: input,
@@ -20,7 +24,7 @@ const ChatBar = () => {
         },
         onCompletion: (completion, finalConversation) => {
           console.log(completion, finalConversation)
-          props.onMessageComplete(completion)
+          props?.onMessageComplete(completion)
         },
       })
     }
@@ -32,10 +36,20 @@ const ChatBar = () => {
         type="text"
         className="w-full rounded-md px-3 py-2"
         placeholder="Talk to any stock..."
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyPress={handleKeyPress}
+        value={'What is the return on investment on tesla and apple if I buy $10 worth of stock on 20 June 2024'}
+        // value={input}
+        // onChange={(e) => setInput(e.target.value)}
+        // onKeyPress={handleKeyPress}
+        // onKeyDown={handleKeyPress}
+        onKeyUp={(e) => {
+          console.log("onKeyUp", e);
+          handleKeyPress(e);
+        }}
       />
+      <InputText value={'What is the return on investment on tesla and apple if I buy $10 worth of stock on 20 June 2024'}  onKeyUp={(e) => {
+          console.log("onKeyUp", e);
+          handleKeyPress(e);
+        }} onChange={(e) => console.log("e", e)}  />
     </div>
   )
 }

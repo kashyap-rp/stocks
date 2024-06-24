@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import { DataTable } from "@/components/stocks/markets/data-table"
 import yahooFinance from "yahoo-finance2"
 import {
@@ -13,7 +13,7 @@ import {
   DEFAULT_TIME_PERIOD,
 } from "@/lib/alpha-finance/constants"
 import { Interval } from "@/types/alpha-vantage"
-import { Suspense, useState } from "react"
+import { Suspense, use, useEffect, useState } from "react"
 import MarketsChart from "@/components/chart/MarketsChart"
 import Link from "next/link"
 import { columns } from "@/components/stocks/markets/columns"
@@ -23,6 +23,7 @@ import {
   validateTimePeriod,
 } from "@/lib/alpha-finance/fetchChartData"
 import { fetchStockSearch } from "@/lib/alpha-finance/fetchStockSearch"
+import { fetchStockSearch2 } from "@/lib/alpha-finance/fetchStockSearch2"
 import { Quote, QuoteWithTitle, Trade } from "@/types"
 import ChatBar from "@/components/MainChatInput"
 
@@ -37,7 +38,7 @@ function isMarketOpen() {
     hour12: false,
   }
   const formatter = new Intl.DateTimeFormat([], options)
-  const [chatMessage, setChatMessage] = useState("");
+  const [chatMessage, setChatMessage] = useState("")
   const timeString = formatter.format(now)
   const [hour, minute] = timeString.split(":").map(Number)
   const timeInET = hour + minute / 60
@@ -94,7 +95,7 @@ function getMarketSentiment(changePercentage: number | undefined) {
   }
 }
 
-export default async function Home({
+export default function Home({
   searchParams,
 }: {
   searchParams?: {
@@ -111,50 +112,94 @@ export default async function Home({
     range,
     (searchParams?.interval as Interval) || DEFAULT_FREQUENCY
   )
-  const news = await fetchStockSearch("^DJI", 1)
+  // let news = {}
+  const [news, setNews] = useState<any>([]);
 
-  const promises = tickers.map(({ symbol }) =>
-    yahooFinance.quoteCombine(symbol)
-  )
-  const results: Quote[] = await Promise.all(promises)
+  useEffect(() => {
+    console.log("useEffect")
+    async function x() {
+      const _news1 = await fetchStockSearch("^DJI", 1)
+      console.log("_news", _news1)
+      setNews(_news1);
+    }
+    x()
+  }, [])
+  let promiseResult = {};
+  useEffect(() => {
+    console.log("useEffect")
+    async function x() {
+      console.log("====1===");
+      // const promises = tickers.map(({ symbol }) =>
+      //   yahooFinance.quoteCombine(symbol)
+      // )
+      console.log("====2===");
+      promiseResult = await fetchStockSearch2(tickers)
+      console.log("====3===", promiseResult);
+    }
+    x()
+  }, [])
 
-  const resultsWithTitles: QuoteWithTitle[] = results.map((result, index) => ({
-    ...result,
-    shortName: tickers[index].shortName,
-  }))
+  // useEffect(() => {
+  //   async function y() {
+  //     // console.log("1===>", tickers)
+  //     // const promises = tickers.map(({ symbol }) =>
+  //     //   yahooFinance.quoteCombine(symbol)
+  //     // )
+  //     // console.log("2===>", promises);
+  //     // try {
+  //     //   const results: any = await Promise.all(promises)
+  //     //   console.log("results===>", results)
+  //     // } catch (x) {
+  //     //   console.log("3===>", x);
+  //     // }
+  //   }
+  //   y();
+  // }, [])
 
-  const marketSentiment = getMarketSentiment(
-    resultsWithTitles[0].regularMarketChangePercent
-  )
+  // const promises = tickers.map(({ symbol }) =>
+  //   yahooFinance.quoteCombine(symbol)
+  // )
+  // const results: Quote[] = await Promise.all(promises)
+  // console.log("resulsts", results);
 
-  const sentimentColor =
-    marketSentiment === "bullish"
-      ? "text-green-500"
-      : marketSentiment === "bearish"
-        ? "text-red-500"
-        : "text-neutral-500"
+  // const resultsWithTitles: QuoteWithTitle[] = results.map((result, index) => ({
+  //   ...result,
+  //   shortName: tickers[index].shortName,
+  // }))
 
-  const sentimentBackground =
-    marketSentiment === "bullish"
-      ? "bg-green-500/10"
-      : marketSentiment === "bearish"
-        ? "bg-red-300/50 dark:bg-red-950/50"
-        : "bg-neutral-500/10"
+  // const marketSentiment = getMarketSentiment(
+  //   resultsWithTitles[0].regularMarketChangePercent
+  // )
 
-  function setChatMessage(message: string): void {
-    throw new Error("Function not implemented.")
-  }
+  // const sentimentColor =
+  //   marketSentiment === "bullish"
+  //     ? "text-green-500"
+  //     : marketSentiment === "bearish"
+  //       ? "text-red-500"
+  //       : "text-neutral-500"
+
+  // const sentimentBackground =
+  //   marketSentiment === "bullish"
+  //     ? "bg-green-500/10"
+  //     : marketSentiment === "bearish"
+  //       ? "bg-red-300/50 dark:bg-red-950/50"
+  //       : "bg-neutral-500/10"
+
+  // function setChatMessage(message: string): void {
+  //   throw new Error("Function not implemented.")
+  // }
 
   return (
     <div className="flex flex-col gap-4">
-      <ChatBar onMessageComplete={setChatMessage} />
-      <div className="flex flex-col gap-4 lg:flex-row">
+      {JSON.stringify(news)}
+      {/* <ChatBar onMessageComplete={setChatMessage} /> */}
+      {/* <div className="flex flex-col gap-4 lg:flex-row">
         <div className="w-full lg:w-1/2">
           <Card className="relative flex h-full min-h-[15rem] flex-col justify-between overflow-hidden">
             <CardHeader>
               <CardTitle className="z-50 w-fit rounded-full px-4  py-2 font-medium dark:bg-neutral-100/5">
                 The markets are{" "}
-                <strong className={sentimentColor}>{marketSentiment}</strong>
+                <strong className={sentimentColor}>{marketSentiment}</strong> 
               </CardTitle>
             </CardHeader>
             {news.news[0] && news.news[0].title && (
@@ -194,8 +239,8 @@ export default async function Home({
             </CardContent>
           </Card>
         </div>
-      </div>
-      <div>
+      </div> */}
+      {/* <div>
         <h2 className="py-4 text-xl font-medium">Markets</h2>
         <Card className="flex flex-col gap-4 p-6 lg:flex-row">
           <div className="w-full lg:w-1/2">
@@ -213,7 +258,7 @@ export default async function Home({
             </Suspense>
           </div>
         </Card>
-      </div>
+      </div> */}
     </div>
   )
 }

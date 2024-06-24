@@ -1,4 +1,5 @@
 // ParentComponent.tsx
+"use client"
 import React from 'react';
 import ChatBarUI from './ui/ChatBar';
 
