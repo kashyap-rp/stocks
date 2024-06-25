@@ -33,6 +33,8 @@ export default async function StockChart({
   const quoteData = await fetchQuote(ticker)
 
   const [chart, quote] = await Promise.all([chartData, quoteData])
+  // console.log("chartData>>", chartData, "quoteData>>", quoteData)
+  // console.log("chart>>", chart, "quote>>", quote)
 
   const priceChange =
     chart.quotes.length &&

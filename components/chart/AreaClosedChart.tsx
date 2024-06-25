@@ -332,14 +332,16 @@ export default function AreaClosedChart({ chartQuotes, range }: any) {
         {chartQuotes.length > 0 ? (
           <ParentSize>
             {({ width, height }) => (
-              <GraphSlider
-                data={chartQuotes}
-                width={500}
-                height={300}
-                top={0}
-                state={state}
-                dispatch={dispatch}
-              />
+              <>
+                <GraphSlider
+                  data={chartQuotes}
+                  width={width}
+                  height={height}
+                  top={0}
+                  state={state}
+                  dispatch={dispatch}
+                />
+              </>
             )}
           </ParentSize>
         ) : (
@@ -362,6 +364,8 @@ export default function AreaClosedChart({ chartQuotes, range }: any) {
           >
             {r.toUpperCase()}
           </Button>
+
+
         ))}
       </div>
     </div>

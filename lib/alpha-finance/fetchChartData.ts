@@ -30,21 +30,21 @@ export async function fetchChartData(
   interval: Interval // TODO: interval is provided, but not used!
 ) {
   noStore()
-
+  console.log("range>>", range)
   const queryOptions: ChartOptions = {
     period1: CalculateRange(range),
     // interval: interval,
   }
-  console.log("*******--3--******", ticker, range, interval);
+  console.log("*******--3--******", ticker, range, interval)
   try {
     const chartData: ChartResultArray = await yahooFinance.chart(
       ticker,
       queryOptions
     )
-    console.log("*******--4--******", chartData);
+    console.log("*******--4--******", chartData)
     return chartData
   } catch (error) {
-    console.log("*******--5--******", error);
+    console.log("*******--5--******", error)
     console.log("Failed to fetch chart data", error)
     throw new Error("Failed to fetch chart data.")
   }
