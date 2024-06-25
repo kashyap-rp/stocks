@@ -26,17 +26,17 @@ export default function RootLayout({
         <body
           className={`${inter.className} min-h-screen bg-background pb-6 antialiased selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black`}
         >
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <Navigation />
-              <main className="container">{children}</main>
-              {/* <ChatBar /> */}
-              <Footer />
-            </ThemeProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Navigation />
+            <main className="container">{children}</main>
+            {/* <ChatBar /> */}
+            <Footer />
+          </ThemeProvider>
         </body>
       </html>
     </ViewTransitions>

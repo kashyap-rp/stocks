@@ -124,3 +124,7 @@ body {
     transform: translateX(0);
   }
 }
+
+nextjs-portal {
+  display: none;
+ }

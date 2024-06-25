@@ -99,15 +99,11 @@ function getMarketSentiment(changePercentage: number | undefined) {
 const validateTimePeriod = (range: string): string =>
   VALID_TIME_PERIODS.includes(range) ? range : DEFAULT_TIME_PERIOD
 
-
-const validateInterval = (
-  range: string,
-  interval: Interval
-): Interval =>
+const validateInterval = (range: string, interval: Interval): Interval =>
   FREQUENCIES_FOR_TIME_PERIOD[range].includes(interval)
     ? interval
     : FREQUENCIES_FOR_TIME_PERIOD[range][0]
-    
+
 export default function Home({
   searchParams,
 }: {
@@ -117,25 +113,27 @@ export default function Home({
     interval?: string
   }
 }) {
-  console.log("++++++++++++++=", searchParams, DEFAULT_FREQUENCY);
+  console.log("++++++++++++++=", searchParams, DEFAULT_FREQUENCY)
   const tickers = isMarketOpen() ? tickerAfterOpen : tickersFutures
 
   const ticker = searchParams?.ticker || tickers[0].symbol
   const range = validateTimePeriod(searchParams?.range || DEFAULT_TIME_PERIOD)
-  console.log("++++++Range", range);
+  console.log("++++++Range", range)
   const interval = validateInterval(
     range,
     (searchParams?.interval as Interval) || DEFAULT_FREQUENCY
   )
-  console.log("++++++interval", interval);
+  console.log("++++++interval", interval)
   // let news = {}
   const [news, setNews] = useState<any>({})
   const [promiseResult, setPromiseResults] = useState<any>([])
   const [resultsWithTitles, setResultsWithTitles] = useState<any>([])
   const [marketSentiment, setMarketSentiment] = useState<String>("neutral")
-  const [sentimentColor, setSentimentColor] = useState<String>("text-neutral-500")
-  const [sentimentBackground, setSentimentBackground] = useState<String>("bg-neutral-500/10")
-  const [chatMessage, setChatMessage] = useState<String>("");
+  const [sentimentColor, setSentimentColor] =
+    useState<String>("text-neutral-500")
+  const [sentimentBackground, setSentimentBackground] =
+    useState<String>("bg-neutral-500/10")
+  const [chatMessage, setChatMessage] = useState<String>("")
 
   useEffect(() => {
     // console.log("useEffect")
@@ -189,7 +187,6 @@ export default function Home({
     fetchYahooQuoteCombine()
   }, [])
 
-
   // function setChatMessage(message: string): void {
   //   // throw new Error("Function not implemented.")
   //   console.error("Function not implemented")
@@ -223,9 +220,11 @@ export default function Home({
 
   return (
     <div className="flex flex-col gap-4">
-      <ChatBar onMessageComplete={(v: any) => {
-        setChatMessage(v);
-      }} />
+      <ChatBar
+        onMessageComplete={(v: any) => {
+          setChatMessage(v)
+        }}
+      />
       <div className="flex flex-col gap-4 lg:flex-row">
         <div className="w-full lg:w-1/2">
           <Card className="relative flex h-full min-h-[15rem] flex-col justify-between overflow-hidden">
@@ -235,7 +234,7 @@ export default function Home({
                 <strong className={sentimentColor}>{marketSentiment}</strong>
               </CardTitle>
             </CardHeader>
-            {(Object.keys(news).length > 0)  && getNews()}
+            {Object.keys(news).length > 0 && getNews()}
             <div
               className={`pointer-events-none absolute inset-0 z-0 h-[65%] w-[65%] -translate-x-[10%] -translate-y-[30%] rounded-full blur-3xl ${sentimentBackground}`}
             />
@@ -252,13 +251,13 @@ export default function Home({
               <Suspense fallback={<div>Loading...</div>}>
                 {resultsWithTitles.length > 0 && (
                   <>
-                  <SectorPerformance
-                    sectorData={resultsWithTitles[0]}
-                    trade={undefined as unknown as Trade}
-                    userProvidedStrikePrice={0}
-                    calculatedPremium={0}
-                    chatMessage={chatMessage}
-                  />
+                    <SectorPerformance
+                      sectorData={resultsWithTitles[0]}
+                      trade={undefined as unknown as Trade}
+                      userProvidedStrikePrice={0}
+                      calculatedPremium={0}
+                      chatMessage={chatMessage}
+                    />
                   </>
                 )}
               </Suspense>
